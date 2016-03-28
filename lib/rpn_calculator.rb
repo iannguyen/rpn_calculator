@@ -1,90 +1,35 @@
-# RPN class
+require_relative './rpn_display'
+require_relative './rpn_stack'
+
 class RPNCalculator
   OPERATORS = [:+, :-, :*, :/].freeze
 
-  attr_reader :stack
+  attr_reader :display, :stack
 
   def initialize
-    @stack = []
+    @display = RPNDisplay.new
+    @stack = RPNStack.new
   end
-
-  private
 
   def start!
     input = nil
     until input == 'q'
-      print '> '
+      prompt
       input = STDIN.gets.chomp
-      valid_input?(input) ? handle_input(input) : invalid_input_prompt
+      status = evaluate(input)
+      log(status)
     end
-    display(@stack.last)
   end
 
-  def valid_input?(input)
-    input == 'q' || operator?(input) || number?(input)
-  end
-
-  def handle_input(input)
-    return if input == 'q'
-    operator?(input) ? perform_op(input) : push(input)
-  end
-
-  def invalid_input_prompt
-    puts 'Invalid input, Try again. =('
-  end
-
-  def perform_op(input)
-    return puts 'Not enough numbers! =(' unless @stack.count > 1
-    second = pop
-    first = pop
-    case input.to_sym
-    when :+
-      final = add(first, second)
-    when :-
-      final = subtract(first, second)
-    when :*
-      final = multiply(first, second)
-    when :/
-      final = divide(first, second)
-    end
-    push(final)
-  end
-
-  def add(f, s)
-    f + s
-  end
-
-  def subtract(f, s)
-    f - s
-  end
-
-  def multiply(f, s)
-    f * s
-  end
-
-  def divide(f, s)
-    if s.zero?
-      puts "Can't divide by zero. =("
-      push(f)
-      s
+  def evaluate(input)
+    return stack.last if input == 'q'
+    if number?(input)
+      push(input)
+    elsif operator?(input)
+      perform_op(input)
     else
-      f / s
+      invalid_input
     end
-  end
-
-  def push(num)
-    @stack << num.to_f
-    display(num)
-  end
-
-  def pop
-    @stack.pop
-  end
-
-  def display(num)
-    int = num.to_i
-    flo = num.to_f
-    puts int == flo ? int : flo
   end
 
   def number?(input)
@@ -97,8 +42,24 @@ class RPNCalculator
     OPERATORS.include?(input.to_sym)
   end
 
-  def current_input_prompt
-    print @stack.to_s + "\n"
+  def push(input)
+    @stack.push(input)
+  end
+
+  def perform_op(input)
+    @stack.perform_op(input)
+  end
+
+  def prompt
+    display.prompt
+  end
+
+  def log(status)
+    display.log(status)
+  end
+
+  def invalid_input
+    display.invalid_input
   end
 end
 
