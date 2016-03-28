@@ -20,8 +20,8 @@ class RPNCalculator
     until input == 'q'
       prompt
       input = STDIN.gets.chomp
-      status = evaluate(input)
-      log(status)
+      result = evaluate(input)
+      log(result)
     end
   end
 
@@ -58,8 +58,8 @@ class RPNCalculator
     display.prompt
   end
 
-  def log(status)
-    display.log(status)
+  def log(result)
+    display.log(result)
   end
 
   def invalid_input

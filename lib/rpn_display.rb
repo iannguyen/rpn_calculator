@@ -4,15 +4,14 @@ class RPNDisplay
     print '> '
   end
 
-  def log(status)
-    return unless status
-    case status
+  def log(result)
+    case result
     when :count_error
       count_error
     when :divide_error
       divide_error
     else
-      show(status)
+      show(result)
     end
   end
 
