@@ -1,3 +1,4 @@
+# handles all stdout messages for the calculator
 class RPNDisplay
   def prompt
     print '> '

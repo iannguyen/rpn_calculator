@@ -1,6 +1,8 @@
 require_relative './rpn_display'
 require_relative './rpn_stack'
 
+# handles input validations, and delegates appropriate actions to display
+# and stack classes
 class RPNCalculator
   OPERATORS = [:+, :-, :*, :/].freeze
 
@@ -10,6 +12,8 @@ class RPNCalculator
     @display = RPNDisplay.new
     @stack = RPNStack.new
   end
+
+  private
 
   def start!
     input = nil

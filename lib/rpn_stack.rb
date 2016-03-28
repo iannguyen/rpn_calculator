@@ -1,3 +1,4 @@
+# handles basic stack and arithmetic operations
 class RPNStack
   attr_reader :stack
 
